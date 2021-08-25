@@ -1,7 +1,7 @@
 import ApiRequest from "./ApiRequest";
 
-interface BinanceAPIInterface {
-  errorCallback(res: any): void;
+export interface BinanceAPIInterface {
+  _errorCallback(res: any): void;
   getSymbolPriceTicker(symbol: string): void;
   getOrderBook(symbol: string): void;
   getExchangeInfomation(symbols: string[]): void;
@@ -16,7 +16,7 @@ export default class BinanceAPI
     super("https://api.binance.com");
   }
 
-  errorCallback(res: any) {
+  _errorCallback(res: any) {
     if (res.response !== void 0) {
       const message = res.response.data.msg || res.response.statusText;
       this.handleError(res.response.status, message);
@@ -29,7 +29,7 @@ export default class BinanceAPI
     const location = "/api/v3/ticker/price";
     const params = { symbol };
     const response = await this.get(location, params).catch((res) =>
-      this.errorCallback(res)
+      this._errorCallback(res)
     );
     return response !== void 0 ? response.data : undefined;
   }
@@ -38,7 +38,7 @@ export default class BinanceAPI
     const location = "/api/v3/depth";
     const params = { symbol };
     const response = await this.get(location, params).catch((res) =>
-      this.errorCallback(res)
+      this._errorCallback(res)
     );
     return response !== void 0 ? response.data : undefined;
   }
@@ -47,7 +47,7 @@ export default class BinanceAPI
     const location = "/api/v3/exchangeInfo";
     const params = { symbols: JSON.stringify(symbols) };
     const response = await this.get(location, params).catch((res) =>
-      this.errorCallback(res)
+      this._errorCallback(res)
     );
     return response !== void 0 ? response.data : undefined;
   }
@@ -56,7 +56,7 @@ export default class BinanceAPI
     const location = "/api/v3/klines";
     const params = { symbol, interval };
     const response = await this.get(location, params).catch((res) =>
-      this.errorCallback(res)
+      this._errorCallback(res)
     );
     return response !== void 0 ? response.data : undefined;
   }

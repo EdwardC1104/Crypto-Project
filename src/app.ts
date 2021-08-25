@@ -1,10 +1,28 @@
-import BinanceAPI from "./BinanceAPI";
+import CryptoData from "./CryptoData";
 
-const BinanceAPIGetter = new BinanceAPI();
+const BinanceAPIGetter = new CryptoData("binance");
 
-// BinanceAPIGetter.getOrderBook("BTCGBP").then(console.log);
-BinanceAPIGetter.getSymbolPriceTicker("BTCGBP").then(console.log);
-// BinanceAPIGetter.getExchangeInfomation(["BTCGBP", "BTCUSDT"]).then(console.log);
-// BinanceAPIGetter.getCandlestickData("BTCUSDT", "1d").then(console.log);
+const getCryptoData = async () => {
+  // console.log(await BinanceAPIGetter.getOrderBook("BTCGBP"));
+  // console.log(await BinanceAPIGetter.getSymbolPriceTicker("BTCGBP"));
+  // console.log(
+  //   await BinanceAPIGetter.getExchangeInfomation(["BTCGBP", "BTCUSDT"])
+  // );
+  const klines = await BinanceAPIGetter.getCandlestickData("BTCUSDT", "5m");
+  console.log(klines);
+  const mean = BinanceAPIGetter.calculateSimpleMovingAverage(klines, 12);
+  const deviation = BinanceAPIGetter.calculateStandardDeviation(
+    mean,
+    klines,
+    12
+  );
+  const bollingerBands = BinanceAPIGetter.calculateBollingerBands(
+    mean,
+    deviation
+  );
+  console.log(mean);
+  console.log(deviation);
+  console.log(bollingerBands);
+};
 
-// console.log("foo");
+getCryptoData();
